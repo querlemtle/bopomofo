@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="100.159mm"
+   height="68.273506mm"
+   viewBox="0 0 100.159 68.273506"
+   version="1.1"
+   id="svg20482"
+   inkscape:export-filename="wu.svg"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview20484"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false" />
+  <defs
+     id="defs20479" />
+  <g
+     inkscape:label="圖層 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-3.9967869,-1.8104965)">
+    <g
+       id="g223990"
+       transform="matrix(10.906927,0,0,10.906927,39.382756,-148.41272)"
+       style="fill:#f4eed7">
+      <g
+         id="g133282"
+         transform="matrix(0.73027393,0,0,0.73027393,-70.641951,-2.4494203)"
+         style="fill:#d5e5ff">
+        <g
+           id="g185112"
+           transform="matrix(0.95563643,0,0,0.95563643,63.388788,-8.4980443)">
+          <path
+             style="fill:#b7c4c8;stroke:#000000;stroke-width:0.3;stroke-linecap:round;stroke-dasharray:none"
+             d="m 40.64409,36.875333 c -1.725943,2.851604 -3.75681,5.067949 -7.537513,3.638802 l -2.599143,-0.422363 1.429528,-1.981845 c 1.461458,-3.657374 4.147115,-4.093173 7.245112,-3.443865 l 1.689442,-2.274249 2.306739,3.18395 z"
+             id="path185103"
+             sodipodi:nodetypes="ccccc" />
+          <path
+             style="fill:#ffffff;stroke:#000000;stroke-width:0.3;stroke-linecap:round;stroke-dasharray:none"
+             d="m 32.034432,37.91499 c 3.116603,-0.03779 1.960268,2.866082 1.949355,2.891546"
+             id="path185105"
+             sodipodi:nodetypes="cc" />
+          <ellipse
+             style="fill:#ffffff;stroke:#000000;stroke-width:0.3;stroke-linecap:round;stroke-dasharray:none"
+             id="path185107"
+             cx="32.846664"
+             cy="39.247051"
+             rx="0.19493568"
+             ry="0.29240355" />
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

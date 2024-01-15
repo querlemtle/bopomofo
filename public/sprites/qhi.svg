@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="100.82701mm"
+   height="94.001808mm"
+   viewBox="0 0 100.82701 94.001808"
+   version="1.1"
+   id="svg20482"
+   inkscape:export-filename="ji.svg"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview20484"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false" />
+  <defs
+     id="defs20479" />
+  <g
+     inkscape:label="圖層 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-3.6410881,-1.6396752)">
+    <g
+       id="g223990"
+       transform="matrix(10.906927,0,0,10.906927,39.382756,-148.41272)"
+       style="fill:#f4eed7">
+      <g
+         id="g117630"
+         transform="matrix(0.88575389,0,0,0.97443209,-30.310072,-24.97306)"
+         style="fill:#f6ffd5">
+        <path
+           style="fill:#f6ffd5;stroke:#000000;stroke-width:0.3;stroke-linecap:round;stroke-dasharray:none"
+           d="M 33.951299,40.871515 C 30.66988,48.441517 30.66988,48.441517 30.66988,48.441517"
+           id="path117598" />
+        <path
+           style="fill:#f6ffd5;stroke:#000000;stroke-width:0.3;stroke-linecap:round;stroke-dasharray:none"
+           d="m 34.081257,40.709069 c 5.160142,0.751981 6.85667,2.60641 6.692791,2.924035"
+           id="path117602"
+           sodipodi:nodetypes="cc" />
+        <path
+           style="fill:#f6ffd5;stroke:#000000;stroke-width:0.3;stroke-linecap:round;stroke-dasharray:none"
+           d="m 40.806536,43.698083 c -1.526995,3.508843 -1.526995,3.508843 -1.526995,3.508843"
+           id="path117604" />
+        <path
+           style="fill:#f6ffd5;stroke:#000000;stroke-width:0.3;stroke-linecap:round;stroke-dasharray:none"
+           d="m 32.554259,44.315379 c 2.430184,0.299481 4.78332,0.810845 6.530345,2.989014"
+           id="path117606"
+           sodipodi:nodetypes="cc" />
+        <ellipse
+           style="fill:#f6ffd5;stroke:#000000;stroke-width:0.3;stroke-linecap:round;stroke-dasharray:none"
+           id="path117608"
+           cx="34.016277"
+           cy="40.270462"
+           rx="0.35738209"
+           ry="0.37362671" />
+      </g>
+      <path
+         style="fill:#f6ffd5;fill-opacity:1;stroke:#ffffff;stroke-width:0.539562;stroke-linecap:round;stroke-opacity:0.974441"
+         d="m 323.75152,296.3454 c -14.42816,-18.26478 -32.52481,-35.97476 -50.36761,-49.2914 -35.06932,-26.17335 -76.67206,-43.50151 -131.47252,-54.76026 -11.04519,-2.26923 -31.99362,-5.84944 -42.336832,-7.23562 -3.467859,-0.46475 -6.305199,-1.00416 -6.305199,-1.1987 0,-0.19453 11.542281,-29.65599 25.649511,-65.46992 14.10724,-35.813927 25.72427,-65.557947 25.81563,-66.097824 0.16483,-0.974034 0.23757,-0.969145 9.44546,0.634817 l 9.27935,1.61641 109.52729,52.617347 109.52729,52.61734 0.19934,2.67362 c 0.19366,2.5974 -0.56643,4.61362 -26.66152,70.72219 -14.77348,37.42671 -27.00615,68.31671 -27.18372,68.64443 -0.20525,0.37883 -2.06893,-1.61451 -5.11647,-5.47243 z"
+         id="path26186"
+         transform="matrix(0.02425828,0,0,0.02425828,-3.6108022,13.607198)" />
+      <path
+         style="fill:#ffff00;fill-opacity:1;stroke:#ffffff;stroke-width:0.763057;stroke-linecap:round;stroke-opacity:0.974441"
+         d="m 138.47274,34.977814 c -1.92083,-1.070595 -3.37282,-3.375583 -4.13968,-6.571614 -0.9955,-4.148975 3.40721,-9.899431 7.57928,-9.899431 2.09026,0 5.36837,3.209869 6.23618,6.106357 2.02923,6.772951 -4.18217,13.426599 -9.67578,10.364688 z"
+         id="path26257"
+         transform="matrix(0.02425828,0,0,0.02425828,-3.6108022,13.607198)" />
+    </g>
+  </g>
+</svg>
