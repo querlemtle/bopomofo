@@ -1,3 +1,3 @@
 export default function getImgPath(char) {
-  return `/sprites/${char.toLowerCase()}.svg`;
+	return `/sprites/${char.toLowerCase()}.svg`;
 }

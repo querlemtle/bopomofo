@@ -1,7 +1,7 @@
 import { Point, PointCloud, Result, PDollarRecognizer } from "./pdollar.js";
 import getImgPath from "./utils.js";
 
-let isPressed = false;
+let isDrawing = false;
 let recognizer = new PDollarRecognizer();
 // Store current stroke points
 let currentStrokePts = [];
@@ -13,14 +13,20 @@ ctx.lineCap = "round";
 ctx.strokeStyle = "red";
 const canvasRect = getCanvasRect(canvas);
 
+const recognizeBtn = document.querySelector(".recognize-btn");
 const clearBtn = document.querySelector(".clear-btn");
 const resultBox = document.querySelector(".result");
 
 window.addEventListener("load", () => {
 	canvas.addEventListener("mousedown", startStroke);
-	canvas.addEventListener("mouseup", endStroke);
 	canvas.addEventListener("mousemove", recordStroke);
+	canvas.addEventListener("mouseup", endStroke);
+	canvas.addEventListener("touchstart", startStroke);
+	canvas.addEventListener("touchmove", recordStroke);
+	// TODO
+	canvas.addEventListener("touchend", endStroke);
 	clearBtn.addEventListener("click", clearCanvas);
+	recognizeBtn.addEventListener("click", recognizeStroke);
 });
 
 function getCanvasRect(canvas) {
@@ -45,63 +51,60 @@ function drawConnectedPoint(from, to) {
 	ctx.stroke();
 }
 
-//
-// Mouse Events
-//
 function startStroke(event) {
-	let x = event.clientX;
-	let y = event.clientY;
-	let button = event.button;
-	document.onselectstart = function () { return false; }; // disable drag-select
-	document.onmousedown = function () { return false; }; // disable drag-select
-	if (button <= 1) {
-		isPressed = true;
-		x -= canvasRect.x - (document.documentElement && document.documentElement.scrollLeft) || document.body.scrollLeft;
-		y -= canvasRect.y - (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
-		// starting a new gesture
-		if (strokeID == 0) {
-			currentStrokePts.length = 0;
-			ctx.clearRect(0, 0, canvasRect.width, canvasRect.height);
-		}
-		currentStrokePts[currentStrokePts.length] = new Point(x, y, ++strokeID);
+	let x = event.clientX || event.touches[0].clientX;
+	let y = event.clientY || event.touches[0].clientY;
+	// Disable drag-select
+	document.onselectstart = function () { return false; };
+	document.onmousedown = function () { return false; };
+	isDrawing = true;
+	x -= canvasRect.x - (document.documentElement && document.documentElement.scrollLeft) || document.body.scrollLeft;
+	y -= canvasRect.y - (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
+	// starting a new gesture
+	if (strokeID == 0) {
+		currentStrokePts.length = 0;
+		ctx.clearRect(0, 0, canvasRect.width, canvasRect.height);
 	}
+	currentStrokePts[currentStrokePts.length] = new Point(x, y, ++strokeID);
 }
 
 function recordStroke(event) {
-	let x = event.clientX;
-	let y = event.clientY;
-	if (isPressed) {
+	if (isDrawing) {
+		let x = event.clientX || event.touches[0].clientX;
+		let y = event.clientY || event.touches[0].clientY;
 		x -= canvasRect.x - (document.documentElement && document.documentElement.scrollLeft) || document.body.scrollLeft;
 		y -= canvasRect.y - (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
-		currentStrokePts.push(new Point(x, y, strokeID)); // append
+		// Push the points into array
+		currentStrokePts.push(new Point(x, y, strokeID));
 		drawConnectedPoint(currentStrokePts.length - 2, currentStrokePts.length - 1);
+	} else {
+		return;
 	}
 }
 
 function endStroke(event) {
-	let button = event.button;
-	document.onselectstart = function () { return true; }; // enable drag-select
-	document.onmousedown = function () { return true; }; // enable drag-select
-	if (button <= 1) {
-		if (isPressed) {
-			isPressed = false;
-		}
-	}
-	else if (button === 2) // segmentation with right-click
-	{
-		if (currentStrokePts.length >= 10) {
-			let result = recognizer.Recognize(currentStrokePts);
-			console.log("Result: " + result.Name + " (" + round(result.Score, 2) + ") in " + result.Time + " ms.");
-			loadResultImg(result.Name);
-		}
-		else {
-			console.log("Too little input made. Please try again.");
-		}
-		strokeID = 0; // signal to begin new gesture on next mouse-down
-	}
+	// Enable drag-select
+	document.onselectstart = function () { return true; };
+	document.onmousedown = function () { return true; };
+	isDrawing = isDrawing ? false : true;
 }
 
-function round(n, d) // round 'n' to 'd' decimals
+function recognizeStroke(points) {
+	points = currentStrokePts;
+	if (points.length >= 10) {
+		let result = recognizer.Recognize(points);
+		console.log("Result: " + result.Name + " (" + round(result.Score, 2) + ") in " + result.Time + " ms.");
+		loadResultImg(result.Name);
+	}
+	else {
+		console.log("Too little input made. Please try again.");
+	}
+	// Signal to begin new gesture on next mouse/touchdown
+	strokeID = 0;
+}
+
+// Round 'n' to 'd' decimals
+function round(n, d)
 {
 	d = Math.pow(10, d);
 	return Math.round(n * d) / d;
