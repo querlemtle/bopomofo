@@ -1,6 +1,7 @@
 import { Point, PointCloud, Result, PDollarRecognizer } from "./pdollar.js";
 import { zhuyin } from "./charList.js";
 import * as PIXI from "pixi.js";
+import * as Matter from "matter-js";
 
 let recognizer = new PDollarRecognizer();
 // store current stroke data
@@ -46,16 +47,15 @@ app.stage.addEventListener("pointerdown", startStroke);
 app.stage.addEventListener("pointermove", recordStroke);
 app.stage.addEventListener("pointerup", endStroke);
 deer.addEventListener("pointertap", () => {
-	if (!drawData.currentPoints.length >= 10) return;
+	if (drawData.currentPoints.length < 10) {
+		alert("輸入資料不足");
+		return;
+	}
 	const resultChar = recognizeStroke(drawData.currentPoints);
 	loadTargetChar(zhuyin, charsContainer, resultChar);
 });
 
 function startStroke(event) {
-	// Disable drag-select
-	document.onselectstart = function () { return false; };
-	document.onmousedown = function () { return false; };
-	
 	drawData.isDrawing = true;
 	drawData.coord.x = event.globalX;
 	drawData.coord.y = event.globalY;
@@ -74,23 +74,16 @@ function recordStroke(event) {
 }
 
 function endStroke() {
-	// Enable drag-select
-	document.onselectstart = function () { return true; };
-	document.onmousedown = function () { return true; };
 	drawData.isDrawing = !drawData.isDrawing;
 }
 
 function recognizeStroke(points) {
-	if (points.length >= 10) {
-		let result = recognizer.Recognize(points);
-		console.log("Result: " + result.Name + " (" + result.Score + ") in " + result.Time + " ms.");
-		return result.Name;
-	}	else {
-		console.log("Too little input made. Please try again.");
-	}
+	let result = recognizer.Recognize(points);
+	console.log("Result: " + result.Name + " (" + result.Score + ") in " + result.Time + " ms.");
 	// Signal to begin new gesture on next mouse/touchdown
 	drawData.strokeId = 0;
 	drawData.currentPoints = [];
+	return result.Name;
 }
 
 async function loadTargetChar(framesArr, container, target) {
