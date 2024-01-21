@@ -2,14 +2,13 @@ import { Point, PointCloud, Result, PDollarRecognizer } from "./pdollar.js";
 import { zhuyin } from "./charList.js";
 import * as PIXI from "pixi.js";
 
-let isDrawing = false;
 let recognizer = new PDollarRecognizer();
-// Store current stroke points
-let currentStrokePts = [];
-let strokeID = 0;
-let coord = {
-	x: 0,
-	y: 0
+// store current stroke data
+let drawData = {
+	currentPoints: [],
+	strokeId: 0,
+	coord: {x: 0, y: 0},
+	isDrawing: false
 };
 
 const app = new PIXI.Application({
@@ -23,85 +22,84 @@ document.body.appendChild(app.view);
 app.stage.eventMode = "static";
 app.stage.hitArea = app.screen;
 
-async function loadChars(framesArr) {
-	const sheet = await PIXI.Assets.load("assets/sheet.json");
-	framesArr.map((frame) => {
-		const sprite = PIXI.Sprite.from(frame);
-		sprite.x = Math.floor(Math.random() * (window.innerWidth * 0.9)) + 1;
-		sprite.y = Math.floor(Math.random() * (window.innerHeight * 0.9)) + 1;
-		app.stage.addChild(sprite);
-	});
-}
-
-loadChars(zhuyin);
+// Load game assets
+const sheet = await PIXI.Assets.load("assets/sheet.json");
 const deer = PIXI.Sprite.from("assets/deer.svg");
 deer.x = 150;
 deer.y = 400;
 deer.anchor.set(0.5);
 deer.eventMode = "static";
+deer.cursor = "pointer";
 app.stage.addChild(deer);
 
+const charsContainer = new PIXI.Container();
+charsContainer.width = app.screen.width / 2;
+charsContainer.height = app.screen.height / 2;
+charsContainer.pivot.x = charsContainer.width / 2;
+charsContainer.pivot.y = charsContainer.height / 2;
+app.stage.addChild(charsContainer);
 
-const container = new PIXI.Container();
-container.width = window.innerWidth;
-container.height = window.innerHeight;
-const drawArea = new PIXI.Graphics();
-
-container.addChild(drawArea);
-app.stage.addChild(container);
+const handDrawnArea = new PIXI.Graphics();
+charsContainer.addChild(handDrawnArea);
 
 app.stage.addEventListener("pointerdown", startStroke);
 app.stage.addEventListener("pointermove", recordStroke);
 app.stage.addEventListener("pointerup", endStroke);
-deer.addEventListener("pointertap", (event) => recognizeStroke(currentStrokePts));
+deer.addEventListener("pointertap", () => {
+	if (!drawData.currentPoints.length >= 10) return;
+	const resultChar = recognizeStroke(drawData.currentPoints);
+	loadTargetChar(zhuyin, charsContainer, resultChar);
+});
 
 function startStroke(event) {
 	// Disable drag-select
 	document.onselectstart = function () { return false; };
 	document.onmousedown = function () { return false; };
 	
-	isDrawing = true;
-	coord.x = event.globalX;
-	coord.y = event.globalY;
-	drawArea.lineStyle({ width: 5, color: "blue", cap: "round" });
-	// starting a new gesture
-	if (strokeID === 0) {
-		currentStrokePts.length = 0;
-		drawArea.clear();
-	}
-	currentStrokePts[currentStrokePts.length] = new Point(coord.x, coord.y, ++strokeID);
+	drawData.isDrawing = true;
+	drawData.coord.x = event.globalX;
+	drawData.coord.y = event.globalY;
+	handDrawnArea.lineStyle({ width: 5, color: "blue", cap: "round" });
+	drawData.currentPoints.push(new Point(Math.round(drawData.coord.x), Math.round(drawData.coord.y), ++drawData.strokeId));
 }
 
 function recordStroke(event) {
-	if(!isDrawing) return;
-	drawArea.moveTo(coord.x, coord.y);
-	drawArea.lineTo(event.globalX, event.globalY);
-	[coord.x, coord.y] = [event.globalX, event.globalY];
+	if(!drawData.isDrawing) return;
+	handDrawnArea.moveTo(drawData.coord.x, drawData.coord.y);
+	handDrawnArea.lineTo(event.globalX, event.globalY);
+	// Update drawData.coord
+	[drawData.coord.x, drawData.coord.y] = [event.globalX, event.globalY];
 	// Push the points into array
-	currentStrokePts.push(new Point(coord.x, coord.y, strokeID));
+	drawData.currentPoints.push(new Point(Math.round(drawData.coord.x), Math.round(drawData.coord.y), drawData.strokeId));
 }
 
-function endStroke(event) {
+function endStroke() {
 	// Enable drag-select
 	document.onselectstart = function () { return true; };
 	document.onmousedown = function () { return true; };
-	isDrawing = !isDrawing;
+	drawData.isDrawing = !drawData.isDrawing;
 }
 
 function recognizeStroke(points) {
 	if (points.length >= 10) {
 		let result = recognizer.Recognize(points);
-		console.log("Result: " + result.Name + " (" + round(result.Score, 2) + ") in " + result.Time + " ms.");
-	}
-	else {
+		console.log("Result: " + result.Name + " (" + result.Score + ") in " + result.Time + " ms.");
+		return result.Name;
+	}	else {
 		console.log("Too little input made. Please try again.");
 	}
 	// Signal to begin new gesture on next mouse/touchdown
-	strokeID = 0;
+	drawData.strokeId = 0;
+	drawData.currentPoints = [];
 }
 
-// Round 'n' to 'd' decimals
-function round(n, d) {
-	d = Math.pow(10, d);
-	return Math.round(n * d) / d;
+async function loadTargetChar(framesArr, container, target) {
+	const foundChar = framesArr.find((char) => {
+		return char.slice(0, char.length - 4) === target;
+	});
+	const charSprite = PIXI.Sprite.from(foundChar);
+	charSprite.x = Math.floor(Math.random() * (window.innerWidth)) + 1;
+	charSprite.y = Math.floor(Math.random() * (window.innerHeight)) + 1;
+	container.addChild(charSprite);
+	handDrawnArea.clear();
 }
