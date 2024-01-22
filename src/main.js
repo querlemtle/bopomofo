@@ -1,10 +1,11 @@
 import { Point, PointCloud, Result, PDollarRecognizer } from "./pdollar.js";
 import { zhuyin } from "./charList.js";
+import { bgm, sfx } from "./sound.js";
 import * as PIXI from "pixi.js";
 import Matter from "matter-js";
 
 let recognizer = new PDollarRecognizer();
-// store current stroke data
+// Store current stroke data
 let drawData = {
 	currentPoints: [],
 	strokeId: 0,
@@ -71,6 +72,9 @@ app.ticker.add((delta) => {
 	Matter.Engine.update(engine, delta * 1000 / 60);
 });
 
+// Play bgm
+bgm.play();
+
 function startStroke(event) {
 	drawData.isDrawing = true;
 	[drawData.coord.x, drawData.coord.y] = [event.globalX, event.globalY];
@@ -112,6 +116,7 @@ async function loadTargetChar(framesArr, container, target) {
 	charSprite.x = Math.floor(Math.random() * (window.innerWidth)) + 1;
 	charSprite.y = Math.floor(Math.random() * (window.innerHeight)) + 1;
 	container.addChild(charSprite);
+	sfx.play();
 	// Create body for char sprite
 	const charBody = Matter.Bodies.rectangle(charSprite.x, charSprite.y, charSprite.width, charSprite.height);
 	Matter.Composite.add(engine.world, charBody);
