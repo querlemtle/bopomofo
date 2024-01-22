@@ -1,7 +1,7 @@
 import { Howl, Howler } from "howler";
 
 const bgm = new Howl({
-	src: ["/sounds/bgm.mp3"],
+	src: ["/sounds/telling-the-story.mp3"],
 	autoplay: true,
 	loop: true,
 	volume: 0.5

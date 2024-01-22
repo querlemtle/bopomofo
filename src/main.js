@@ -13,6 +13,9 @@ let drawData = {
 	isDrawing: false
 };
 
+let isMuted = false;
+
+// Init PIXI canvas
 const app = new PIXI.Application({
 	resizeTo: window,
 	background: "#fee9f6",
@@ -24,15 +27,23 @@ document.body.appendChild(app.view);
 app.stage.eventMode = "static";
 app.stage.hitArea = app.screen;
 
+const volumeIcon = PIXI.Sprite.from("assets/volume.svg");
+[volumeIcon.x, volumeIcon.y, volumeIcon.width, volumeIcon.height] = [10, 10, 30, 30];
+app.stage.addChild(volumeIcon);
+volumeIcon.cursor = "pointer";
+volumeIcon.eventMode = "static";
+
 // Load game assets
 const sheet = await PIXI.Assets.load("assets/sheet.json");
 const deer = PIXI.Sprite.from("assets/deer.svg");
-
+const ground = PIXI.Sprite.from("assets/ground.png");
+[ground.x, ground.y, ground.width, ground.height] = [app.screen.width / 2, app.screen.height, app.screen.width, 200];
+ground.anchor.set(0.5);
 [deer.x, deer.y, deer.width, deer.height] = [100, 400, 200, 200]; 
 deer.anchor.set(0.5);
 deer.eventMode = "static";
 deer.cursor = "pointer";
-app.stage.addChild(deer);
+app.stage.addChild(deer, ground);
 
 const charsContainer = new PIXI.Container();
 charsContainer.width = app.screen.width / 2;
@@ -56,24 +67,29 @@ deer.addEventListener("pointertap", () => {
 	loadTargetChar(zhuyin, charsContainer, resultChar);
 });
 
-const engine = Matter.Engine.create();
-const deerBody = Matter.Bodies.rectangle(deer.x, deer.y, deer.width, deer.height);
-const ground = Matter.Bodies.rectangle(0, 800, window.innerWidth, window.innerHeight, { isStatic: true });
-const mouseConstraint = Matter.MouseConstraint.create(engine, {
-	element: app.view
-});
-
-Matter.Composite.add(engine.world, [deerBody, ground, mouseConstraint]);
-
-// Constantly update screen
-app.ticker.add((delta) => {
-	deer.x = deerBody.position.x;
-	deer.y = deerBody.position.y;
-	Matter.Engine.update(engine, delta * 1000 / 60);
+// Mute bgm/sfx button
+volumeIcon.addEventListener("pointertap", () => {
+	isMuted = !isMuted;
+	bgm.mute(isMuted);
 });
 
 // Play bgm
 bgm.play();
+
+const engine = Matter.Engine.create();
+const deerBody = Matter.Bodies.rectangle(deer.x, deer.y, deer.width, deer.height);
+const groundBody = Matter.Bodies.rectangle(app.screen.width / 2, app.screen.height, app.screen.width, 200, { isStatic: true });
+const mouseConstraint = Matter.MouseConstraint.create(engine, {
+	element: app.view
+});
+
+Matter.Composite.add(engine.world, [deerBody, groundBody, mouseConstraint]);
+
+// Constantly update screen
+app.ticker.add((delta) => {
+	[deer.x, deer.y] = [deerBody.position.x, deerBody.position.y];
+	Matter.Engine.update(engine, delta * 1000 / 60);
+});
 
 function startStroke(event) {
 	drawData.isDrawing = true;
