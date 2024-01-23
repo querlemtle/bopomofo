@@ -33,6 +33,31 @@ app.stage.addChild(volumeIcon);
 volumeIcon.cursor = "pointer";
 volumeIcon.eventMode = "static";
 
+const wallTexture = PIXI.Texture.from("/assets/wall.png");
+const wallSprite = new PIXI.Sprite(wallTexture);
+wallSprite.width = app.screen.width * 2 / 3;
+wallSprite.height = app.screen.height;
+wallSprite.x = app.screen.width / 3;
+wallSprite.y = 0;
+wallSprite.alpha = 0.2;
+wallSprite.tint = 0x00FF00;
+wallSprite.eventMode = "static";
+app.stage.addChild(wallSprite);
+
+const hintSprite = PIXI.Sprite.from("assets/hint.svg");
+[hintSprite.x, hintSprite.y] = [50, 200];
+app.stage.addChild(hintSprite);
+hintSprite.cursor = "pointer";
+hintSprite.eventMode = "static";
+const hintModal = document.querySelector(".hint");
+hintSprite.addEventListener("pointertap", () => {
+	hintModal.showModal();
+});
+const hintCloseBtn = document.querySelector(".hint-close-btn");
+hintCloseBtn.addEventListener("pointerdown", () => {
+	hintModal.close();
+});
+
 // Load game assets
 const sheet = await PIXI.Assets.load("assets/sheet.json");
 const deer = PIXI.Sprite.from("assets/deer.svg");
@@ -55,12 +80,13 @@ app.stage.addChild(charsContainer);
 const handDrawnArea = new PIXI.Graphics();
 charsContainer.addChild(handDrawnArea);
 
-app.stage.addEventListener("pointerdown", startStroke);
-app.stage.addEventListener("pointermove", recordStroke);
-app.stage.addEventListener("pointerup", endStroke);
+wallSprite.addEventListener("pointerdown", startStroke);
+wallSprite.addEventListener("pointermove", recordStroke);
+wallSprite.addEventListener("pointerup", endStroke);
 deer.addEventListener("pointertap", () => {
 	if (drawData.currentPoints.length < 10) {
 		alert("輸入資料不足");
+		handDrawnArea.clear();
 		return;
 	}
 	const resultChar = recognizeStroke(drawData.currentPoints);
@@ -118,7 +144,10 @@ function recognizeStroke(points) {
 	// Signal to begin new gesture on next mouse/touchdown
 	drawData.strokeId = 0;
 	drawData.currentPoints = [];
-	if(result.Score < 0.5) return;
+	if(result.Score < 0.5) {
+		alert("無法辨識");
+		return;
+	}
 	return result.Name;
 }
 
@@ -129,8 +158,8 @@ async function loadTargetChar(framesArr, container, target) {
 		return char.slice(0, char.length - 4) === target;
 	});
 	const charSprite = PIXI.Sprite.from(foundChar);
-	charSprite.x = Math.floor(Math.random() * (window.innerWidth)) + 1;
-	charSprite.y = Math.floor(Math.random() * (window.innerHeight)) + 1;
+	charSprite.x = Math.floor(Math.random() * (app.screen.width * 2 / 3)) + app.screen.width / 3;
+	charSprite.y = Math.floor(Math.random() * (app.screen.height)) + 1;
 	container.addChild(charSprite);
 	sfx.play();
 	// Create body for char sprite
